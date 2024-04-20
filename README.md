@@ -5,3 +5,9 @@
 ```
 npm init electron-app [project-name]
 ```
+
+运行
+
+```
+npm start
+```
