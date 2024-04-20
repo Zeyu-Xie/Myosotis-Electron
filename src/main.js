@@ -21,6 +21,19 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  mainWindow.webContents.on("dom-ready", () => {
+    console.log("Lifecycle: 2, dom-ready");
+  });
+
+  mainWindow.webContents.on("did-finish-load", () => {
+    console.log("Lifecycle: 3, did-finish-load");
+  });
+
+  mainWindow.webContents.on("close", () => {
+    console.log("Lifecycle: 8, close");
+  });
+
 };
 
 // This method will be called when Electron has finished
@@ -36,6 +49,8 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  console.log("Lifecycle: 1, app-ready");
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -45,7 +60,21 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+
+  console.log("Lifecycle: 4, window-all-closed");
 });
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+app.on("before-quit", () => {
+  console.log("Lifecycle: 5, before-quit");
+});
+
+app.on("will-quit", () => {
+  console.log("Lifecycle: 6, will-quit");
+});
+
+app.on("quit", () => {
+  console.log("Lifecycle: 7, quit");
+});
