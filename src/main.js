@@ -1,5 +1,23 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
+
+ipcMain.handle('createNewWindow', () => {
+  const newWindow = new BrowserWindow({
+    width: 400,
+    height: 300,
+    frame: true,
+    autoHideMenuBar: true,
+    title: "Myosotis Electron - Test",
+    icon: path.join(__dirname, "icon.png"),
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  newWindow.loadFile(path.join(__dirname, 'test.html'));
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -17,6 +35,8 @@ const createWindow = () => {
     icon: path.join(__dirname, "icon.png"),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
@@ -24,7 +44,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   mainWindow.webContents.on("dom-ready", () => {
     console.log("Lifecycle: 2, dom-ready");
